@@ -1,14 +1,11 @@
--- Hypothèse format de date mal formatté comme dans l'échantillon DD/MM/YY => DD/MM/YYYY
 SELECT
-    DATE AS DATE,
-    -- format date?
+    date AS date,
     SUM(prod_price * prod_qty) AS ventes
 FROM
     `test_sevrier.TRANSACTIONS`
 WHERE
-    DATE BETWEEN "2019-01-01"
-    AND "2019-12-31" -- check format of date
+    date BETWEEN "2019-01-01" AND "2019-12-31"
 GROUP BY
-    DATE
+    date
 ORDER BY
-    DATE ASC
+    date ASC

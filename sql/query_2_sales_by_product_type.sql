@@ -14,9 +14,8 @@ SELECT
     ) AS ventes_deco
 FROM
     `test_sevrier.TRANSACTIONS` AS t
-    LEFT JOIN `test_sevrier.PRODUCT_NOMENCLATURE` AS pn
-    ON t.prod_id = pn.product_id
+LEFT JOIN `test_sevrier.PRODUCT_NOMENCLATURE` AS pn ON t.prod_id = pn.product_id
 WHERE
-    t.date BETWEEN "2019-01-01" AND "2019-12-31" -- check format of date
+    t.date BETWEEN "2019-01-01" AND "2019-12-31"
 GROUP BY
     client_id

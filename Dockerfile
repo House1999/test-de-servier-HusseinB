@@ -3,6 +3,7 @@ FROM python:3.9.13-slim
 
 ENV POETRY_HOME="/root/.poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
+ENV PYTHONPATH=/opt/app
 
 WORKDIR /opt
 COPY . /opt
@@ -19,5 +20,6 @@ RUN echo -n \
     && poetry install --no-interaction --no-ansi
 
 RUN chmod -R 755 /opt
+
 
 CMD ["bash"]
