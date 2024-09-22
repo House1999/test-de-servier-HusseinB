@@ -1,8 +1,5 @@
+# Third-party packages
 from pandera.typing import DataFrame
-
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import List, Dict
 from loguru import logger
 from sys import stderr
 
@@ -14,6 +11,12 @@ logger.add(
 )
 
 
+# Built-in packages
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import List, Dict
+
+
 @dataclass
 class JournalMentions:
     title: str
@@ -23,8 +26,6 @@ class JournalMentions:
     clinical_trials_publications: List = field(default_factory=list, init=False)
 
     def extract_drug_from_publication_title(self, article_title: str) -> List:
-        #! Hypothèse : no mentioned drug => skip
-        #! index of dataframe is ID
         title_words_set = set(article_title.split())
 
         mentioned_drugs = []
@@ -42,9 +43,6 @@ class JournalMentions:
         return mentioned_drugs
 
     def get_article_information_from_id(self, article_id: str) -> Dict:
-        #! Index of dataframe is ID
-        #! Title should be cleaned and lowered
-
         current_article_row = self.journal_articles_dataFrame.loc[article_id]
 
         article_title = current_article_row["title"]
@@ -64,8 +62,6 @@ class JournalMentions:
         return article_info
 
     def build_links_articles_drug_mentions(self) -> None:
-        #! no duplicate articles
-        #! Articles of the current journal only, no duplicates
         for article_id in self.journal_articles_dataFrame.index:
             # Get info about articles
             article_info = self.get_article_information_from_id(article_id)
