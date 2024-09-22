@@ -9,8 +9,6 @@ The primary goal is to generate a link graph that illustrates the connections be
 
 # Table of contents :
 
-- [Servier - Data Engineering Test by Hussein Ballouk](#servier---data-engineering-test-by-hussein-ballouk)
-- [Table of contents :](#table-of-contents-)
 - [Section 1 - Python and Data Engineering](#section-1---python-and-data-engineering)
   - [Before we start - Hypothesis about the project data](#before-we-start---hypothesis-about-the-project-data)
   - [Requirements](#requirements)
