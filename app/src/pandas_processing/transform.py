@@ -23,13 +23,34 @@ def merge_dataframes(list_dataframes: List) -> DataFrame:
 
 
 def merge_rows(group):
-    """This function will fille all missing data  based on the other instances of the same row, then drops the duplicates by returning only one row"""
+    """
+    This function fills all missing data by using values from other instances of the same row (duplicates).
+    Once the rows are merged, it then removes duplicates, returning only a single row per unique entry (ID).
+
+    Parameters:
+        - group (DataFrame): A pandas DataFrame Group (grouped on title and mentiond ate).
+
+    Returns:
+        - DataFrame: A single row with missing values filled and duplicates dropped.
+    """
+
+    """"""
     return group.ffill().bfill().iloc[0]
 
 
 def build_link_graph_from_df(
     df_articles_cleaned: DataFrame, df_drugs_cleaned: DataFrame
 ) -> Dict:
+    """
+    Builds a link graph from cleaned article and drug DataFrames. Check the class functions' docstring for more details.
+
+    Args:
+        - df_articles_cleaned (DataFrame): DataFrame containing cleaned article data.
+        - df_drugs_cleaned (DataFrame): DataFrame containing cleaned drug data.
+
+    Returns:
+        - Dict: A dictionary representing the link graph with journals and their related articles and drug mentions.
+    """
     # Get the list of all journals
     list_distinct_journals = df_articles_cleaned["journal"].unique()
 

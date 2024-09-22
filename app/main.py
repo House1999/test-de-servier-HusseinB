@@ -31,6 +31,10 @@ from app.src.constants import (
 def clean_dataframes(
     clinical_df: DataFrame, pubmed_df: DataFrame, drugs_df: DataFrame
 ) -> List:
+    """
+    This function is simply used to orchestrate the different cleaning steps in the correct order.
+    Check the docstring of each function or the in-line comments for more details.
+    """
     # Standardize column names
     clinical_df = C.rename_column(clinical_df, {"scientific_title": "title"})
     drugs_df = C.rename_column(drugs_df, {"drug": "name"})
@@ -110,7 +114,10 @@ def generate_graph_link(
 
 
 def fetch_top_journals() -> List:
-    """This function will return a list of the name(s) of the journal(s) that has mentioned most unique drugs."""
+    """
+    Returns a list of the name(s) of the journal(s) that has mentioned most unique drugs.
+    In the case of a tie, all the tied journal are returned.
+    """
     graph_link_dict = U.import_json_file_as_dict(OUTPUT_PATH)
 
     unique_mentions_mapping = {}
@@ -160,7 +167,7 @@ def fetch_drugs_mentioned_by_pubmed_journals(drug_name: str) -> List:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Hussein Ballouk - Test Data Engineering Servier"
+        description="Servier - Test Data Engineering by Hussein Ballouk"
     )
 
     parser.add_argument(

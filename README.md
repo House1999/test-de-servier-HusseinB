@@ -1,21 +1,29 @@
 # Servier - Data Engineering Test by Hussein Ballouk
 
-This repository hosts the codebase for Servier's Data Engineering technical test. The test focuses on analyzing journals referenced by PubMed articles and clinical trials, utilizing input data in the form of .csv and .json files. The primary goal is to generate a link graph that illustrates the connections between journals and the drugs mentioned in the titles of the articles.
+This repository hosts the codebase for Servier's Data Engineering technical test. 
 
-Table of contents :
+The test focuses on analyzing journals referenced by PubMed articles and clinical trials, utilizing input data in the form of .csv and .json files. T
+
+he primary goal is to generate a link graph that illustrates the connections between journals and the drugs mentioned in the titles of the articles.
+
+
+# Table of contents :
+
+- [Servier - Data Engineering Test by Hussein Ballouk](#servier---data-engineering-test-by-hussein-ballouk)
+- [Table of contents :](#table-of-contents-)
 - [Section 1 - Python and Data Engineering](#section-1---python-and-data-engineering)
-  - [Before we start - Hypothesis about the project data](#before-we-start---hypothesis-about-the-project-data)
-  - [Requirements](#requirements)
-  - [Installation and packaging](#installation-and-packaging)
-  - [Commands - Main code (Part 3) and Ad-hoc code (Part 4)](#commands---main-code-part-3-and-ad-hoc-code-part-4)
-  - [Adapt pipeline for production](#adapt-pipeline-for-production)
-    - [Deployment](#deployment)
-    - [Orchestration](#orchestration)
-  - [How to adapt the code for Big Data (Part 6)](#how-to-adapt-the-code-for-big-data-part-6)
+  - [I. Before we start - Hypothesis about the project data](#i-before-we-start---hypothesis-about-the-project-data)
+  - [II. Requirements](#ii-requirements)
+  - [III. Installation and packaging](#iii-installation-and-packaging)
+  - [IV. Commands - Main code (Part 3) and Ad-hoc code (Part 4)](#iv-commands---main-code-part-3-and-ad-hoc-code-part-4)
+  - [V. Adapt pipeline for production](#v-adapt-pipeline-for-production)
+    - [A. Deployment](#a-deployment)
+    - [B. Orchestration](#b-orchestration)
+  - [VI. How to adapt the code for Big Data (Part 6)](#vi-how-to-adapt-the-code-for-big-data-part-6)
 - [Section 2 - SQL](#section-2---sql)
 
 # Section 1 - Python and Data Engineering
-## Before we start - Hypothesis about the project data
+## I. Before we start - Hypothesis about the project data
 
 The project was developed with the following hypothesis in mind :
 - If an article does not mention a drug in its title, then we skip the article in the link graph.
@@ -24,7 +32,7 @@ The project was developed with the following hypothesis in mind :
 - We can have broken `.json` input (trailing comma) and we need to take that into account.
 - For the ad-hoc question, we can have multiple top journals if we have a tie in the number of unique drug mentions. In this case, we will return a list of all the tied journals.
 
-## Requirements
+## II. Requirements
 
 Before we start, you should make sure that you have the following requirements in order to run the code on your computer :
 - `Python >= 3.10.9` - Please install the appropriate version from the [official website](https://www.python.org/downloads/).
@@ -32,7 +40,7 @@ Before we start, you should make sure that you have the following requirements i
 - For packaging, you will need either `poetry` (downloaded using `pip install poetry`) or `docker` (downloaded from the [official website](https://www.docker.com/products/docker-desktop/)).
 
 
-## Installation and packaging
+## III. Installation and packaging
 
 If you have opted for `poetry` as your packaging tool, then you will need to run the following commands from the root level of the repository :
 ```cmd
@@ -40,14 +48,14 @@ poetry install
 poetry shell
 ```
 
-If you would rather run the container using docker, then i would recommend you to run the following commands from the root level of the repository :
+If you would rather run the container using `docker`, then i would recommend you to run the following commands from the root level of the repository :
 ```cmd
 docker build -t test-servier-app:latest -f Dockerfile .
 docker run -i -t test-servier-app:latest
 ```
 
 
-## Commands - Main code (Part 3) and Ad-hoc code (Part 4)
+## IV. Commands - Main code (Part 3) and Ad-hoc code (Part 4)
 
 It is important to note that the commands in this section are run either in your `poetry shell` or `docker container bash`. Otherwise, you will have missing librairies.
 
@@ -70,8 +78,8 @@ python main.py generate_graph_link --clinical_trials_paths '<PATH1.csv>' --pubme
 - [Ad-hoc] - To get the name(s) of the drug(s) mentioned by non-clinical trials referenced journals, based on a specific drug mention : run `python main.py get_drug_mentions --adhoc_drug_name '<DRUG_NAME>'`
 
 
-## Adapt pipeline for production
-### Deployment
+## V. Adapt pipeline for production
+### A. Deployment
 
 In order to setup a production-grade pipeline, some improvments can be made in the deployment section :
 - Setup variables by environment to allow for easier testing and seperation of environments. So have `.env_dev` / `.env_ppd` / `.env_prd`.
@@ -85,7 +93,7 @@ In order to setup a production-grade pipeline, some improvments can be made in t
 - The tags should follow the Semantic Versioning model and rules.
 - Run security, regression and end-to-end tests with reports using the CI/CD
 
-### Orchestration
+### B. Orchestration
 
 The codebase was written with `Composer` / `Airflow` in mind. We can run this code using 2 different methods :
 - First, we can simply import the application and use `PythonOperator` to run our code. Snippet :
@@ -129,7 +137,7 @@ The codebase was written with `Composer` / `Airflow` in mind. We can run this co
     )
     ```
 
-## How to adapt the code for Big Data (Part 6)
+## VI. How to adapt the code for Big Data (Part 6)
 
 In order to adapt the code for Big Data (Milions of rows, TB of data), we have two options for the **ETL** pipeline :
 - Use `pySpark` instead of `pandas` so we can have distributed computation.

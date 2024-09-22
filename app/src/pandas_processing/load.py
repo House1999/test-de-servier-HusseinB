@@ -15,8 +15,8 @@ logger.add(
 from typing import Dict, List
 
 # My custom packages
-from app.utils.files_processing import fix_broken_json
-from app.src.pandas_processing.transform import merge_dataframes
+import app.utils.files_processing as P
+import app.src.pandas_processing.transform as T
 
 
 def load_df_from_csv(filepath: str, delimiter: str = ",", header: int = 0) -> DataFrame:
@@ -32,6 +32,16 @@ def load_df_from_dict(dictionary: Dict) -> DataFrame:
 
 
 def load_input_data(paths: List) -> DataFrame:
+    """
+    Loads the project's input data from a list of file paths (provided via arguments).
+    When multiple input files are detected (example : 2 PubMed files), they are all merged into a single dataframes.
+
+    Parameters:
+        - paths (List): A list of file paths containing data in CSV or JSON format.
+
+    Returns:
+        - df: Dataframe containing data from one or multiple input files.
+    """
     list_dfs = []
 
     for path in paths:
@@ -45,7 +55,7 @@ def load_input_data(paths: List) -> DataFrame:
                 logger.warning(
                     f"Broken json detected in {path}. Attempting to clean it and re-load it."
                 )
-                fixed_json = fix_broken_json(path)
+                fixed_json = P.fix_broken_json(path)
                 df = load_df_from_dict(fixed_json)
 
         else:
@@ -55,7 +65,7 @@ def load_input_data(paths: List) -> DataFrame:
 
         list_dfs.append(df)
 
-    df = merge_dataframes(list_dfs)
+    df = T.merge_dataframes(list_dfs)
 
     logger.info(f"[Loading] - Successfully loaded and merged dataframes from {paths}.")
     return df

@@ -26,6 +26,15 @@ class JournalMentions:
     clinical_trials_publications: List = field(default_factory=list, init=False)
 
     def extract_drug_from_publication_title(self, article_title: str) -> List:
+        """
+        Find the name(s) of the drug(s) mentioned in the any given article title.
+
+        Parameters:
+            - article_title (str): The title of the article to analyze.
+
+        Returns:
+            - List: A list of mentioned drugs in the format [drug_id, drug_name].
+        """
         title_words_set = set(article_title.split())
 
         mentioned_drugs = []
@@ -43,6 +52,15 @@ class JournalMentions:
         return mentioned_drugs
 
     def get_article_information_from_id(self, article_id: str) -> Dict:
+        """
+        Get all information about an article based on the provided article ID.
+
+        Parameters:
+            - article_id (str): The unique identifier of the article.
+
+        Returns:
+            - article_info: A dictionary containing information about the article like the title, mention date, and type of the article.
+        """
         current_article_row = self.journal_articles_dataFrame.loc[article_id]
 
         article_title = current_article_row["title"]
@@ -62,6 +80,18 @@ class JournalMentions:
         return article_info
 
     def build_links_articles_drug_mentions(self) -> None:
+        """
+        Builds, for a each journal, links between each articles referencing the journal and the drug mentioned in the title.
+
+        It builds a dictionary describing the link between each article and the drug mentioned. Dictionary format :
+            - articleId: ID of the article.
+            - articleTitle: Title of the article.
+            - mentionDate: The date of the article publication / drug mention.
+            - mentionedDrugID: ID of the drug mentioned in the title of the article.
+            - mentionedDrugName: Name of the drug mentioned in the title of the article.
+
+        Raises an exception if an article is neither clinical nor from PubMed.
+        """
         for article_id in self.journal_articles_dataFrame.index:
             # Get info about articles
             article_info = self.get_article_information_from_id(article_id)
@@ -92,6 +122,13 @@ class JournalMentions:
                     )
 
     def generate_article_link_graph_dict(self) -> Dict:
+        """
+        This function will return a dictionary representing the complete link graph. It contains all entities and relations.
+        It Executes the method above to build links between each article and mentioned drug, then shapes up the output file.
+
+        Returns:
+            - output : Dictionary representing the complete link graph with all entities and relations.
+        """
         self.build_links_articles_drug_mentions()
 
         output = {
