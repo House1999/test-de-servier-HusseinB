@@ -16,10 +16,12 @@ RUN echo -n \
         gpg \
         sudo \
     && curl -sSL https://install.python-poetry.org | python3 - \
-    && pip install --upgrade pip \
-    && poetry install --no-interaction --no-ansi
+    && pip install --upgrade pip
+
+RUN poetry config virtualenvs.in-project true
+RUN poetry install --no-interaction --no-ansi
 
 RUN chmod -R 755 /opt
 
 
-CMD ["bash"]
+CMD ["poetry", "run", "bash"]

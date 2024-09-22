@@ -29,7 +29,8 @@ The project was developed with the following hypothesis in mind :
 - An article can mention one or multiple drugs in the same title. In this case, 2 instances of the same article are shown in the link graph (one per drug).
 - We might have multiple input files to load data from, in `.csv` and `.json` format. This is the case for `pubmed.csv` and `pubmed.json` that should be loaded together.
 - We can have broken `.json` input (trailing comma) and we need to take that into account.
-- For the ad-hoc question, we can have multiple top journals if we have a tie in the number of unique drug mentions. In this case, we will return a list of all the tied journals.
+- For the first ad-hoc question, we can have multiple top journals if we have a tie in the number of unique drug mentions. In this case, we will return a list of all the tied journals.
+- For the second ad-hoc question, the name of the given drug is returned in the output. The output does not exclude it, it includes both the original drug provided and the other drugs found.
 
 ## Requirements
 
@@ -68,8 +69,8 @@ Now you can finally start running the python commaands. You can get familiar wit
 
 
 Here is a list of commands to run for each use case  :
-- [Main] - If you want to generate the link graph, using the `.env` variables : run `python main.py generate_graph_link`
-- [Main] - If you prefer overwriting the input and output paths, you can do so with the following command and flags :
+- [Main] - If you want to generate the link graph, using the `.env` variables : run `python main.py generate_graph_link`. Check out the generated output under [graph_link.json](app/output/graph_link.json)
+- [Main] - Alternatively, you can overwrite one or all input and output paths by specifying them as flags as seen in the following command :
 ```
 python main.py generate_graph_link --clinical_trials_paths '<PATH1.csv>' --pubmed_paths '<PATH1.csv>;<PATH2.csv>' --drugs_paths '<PATH1.csv>' --output_path '<OUTUPT.json>'
 ```
