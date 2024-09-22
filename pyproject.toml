@@ -14,6 +14,7 @@ python = "^3.9.13"
 pandas = "^2.2.3"
 pandera = "^0.20.4"
 loguru = "^0.7.2"
+numpy = "~2.0.2"
 
 
 [build-system]
