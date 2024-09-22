@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "test-de-servier-hussein-b"
+version = "0.1.0"
+description = "Codebase of Servier's Data Engineering technical test"
+authors = ["Hussein Ballouk <houssein.ballouk.hb2@gmail.com>"]
+readme = "README.md"
+
+packages = [
+    { include = "app" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.9.13"
+pandas = "^2.2.3"
+pandera = "^0.20.4"
+loguru = "^0.7.2"
+numpy = "~2.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
