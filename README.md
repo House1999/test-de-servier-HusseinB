@@ -9,11 +9,14 @@ The primary goal is to generate a link graph that illustrates the connections be
 
 # Table of contents :
 
+- [Servier - Data Engineering Test by Hussein Ballouk](#servier---data-engineering-test-by-hussein-ballouk)
+- [Table of contents :](#table-of-contents-)
 - [Section 1 - Python and Data Engineering](#section-1---python-and-data-engineering)
   - [Before we start - Hypothesis about the project data](#before-we-start---hypothesis-about-the-project-data)
   - [Requirements](#requirements)
   - [Installation and packaging](#installation-and-packaging)
   - [Commands - Main code (Part 3) and Ad-hoc code (Part 4)](#commands---main-code-part-3-and-ad-hoc-code-part-4)
+  - [Running Unit Tests](#running-unit-tests)
   - [Adapt pipeline for production](#adapt-pipeline-for-production)
     - [A. Deployment](#a-deployment)
     - [B. Orchestration](#b-orchestration)
@@ -41,13 +44,13 @@ Before we start, you should make sure that you have the following requirements i
 ## Installation and packaging
 
 If you have opted for `poetry` as your packaging tool, then you will need to run the following commands from the root level of the repository :
-```cmd
+```bash
 poetry install
 poetry shell
 ```
 
 If you would rather run the container using `docker`, then i would recommend you to run the following commands from the root level of the repository :
-```cmd
+```bash
 docker build -t test-servier-app:latest -f Dockerfile .
 docker run -i -t test-servier-app:latest
 ```
@@ -58,7 +61,7 @@ docker run -i -t test-servier-app:latest
 It is important to note that the commands in this section are run either in your `poetry shell` or `docker container bash`. Otherwise, you will have missing librairies.
 
 Before running the main python application, you will need to run these two commands in order to setup your environment :
-```cmd
+```bash
 cd app
 export $(cat .env | xargs)
 ```
@@ -74,6 +77,28 @@ python main.py generate_graph_link --clinical_trials_paths '<PATH1.csv>' --pubme
 ```
 - [Ad-hoc] - To get the name(s) of the journal(s) mentioning the most unique drugs : run `python main.py get_top_journal`
 - [Ad-hoc] - To get the name(s) of the drug(s) mentioned by non-clinical trials referenced journals, based on a specific drug mention : run `python main.py get_drug_mentions --adhoc_drug_name '<DRUG_NAME>'`
+
+
+## Running Unit Tests
+
+Before we start, a quick note. As stated below, the unit tests section should be improved and **enriched** especially if we plan on shipping this to **production** and ingest **TB of data**.
+
+In order to run the unit tests, you should start by heading inside the `app/` folder then running the following command to run **all** tests:
+```bash
+cd app
+python -m unittest discover tests
+```
+
+Alternatively, you can run each test separately from the rest. Here's the exhaustive list of commands :
+```bash
+cd app
+python tests/test_clean.py
+python tests/test_files_processing.py
+python tests/test_journal_mentions.py
+python tests/test_json_processing.py
+python tests/test_transform.py
+```
+
 
 
 ## Adapt pipeline for production
@@ -130,7 +155,7 @@ The codebase was written with `Composer` / `Airflow` in mind. We can run this co
         image=my_docker_image_name,
         container_resources=pod_resources,
         retries=1,
-        cmds=["/bin/bash", "-c"],
+        bashs=["/bin/bash", "-c"],
         arguments=["export $(cat .env | xargs) && python main.py generate_graph_link"],
     )
     ```

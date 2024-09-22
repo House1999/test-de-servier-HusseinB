@@ -1,20 +1,12 @@
 # Third-party packages
 import pandas as pd
 from pandera.typing import DataFrame
-from loguru import logger
-from sys import stderr
-
-logger.remove()
-logger.add(
-    stderr,
-    level="INFO",
-    format="<cyan>[{file.name}:{line} - {function}()]</cyan> <green>{time:YYYY-MM-DD HH:mm:ss}</green> - {level} - <level>{message}</level>",
-)
 
 # Built-in packages
 from typing import Dict, List
 
 # My custom packages
+from app.utils.my_logger import logger
 import app.utils.files_processing as P
 import app.src.pandas_processing.transform as T
 

@@ -1,6 +1,7 @@
 # Third-party packages
 import pandas as pd
 from pandera.typing import DataFrame
+import numpy as np
 
 # Built-in packages
 import re
@@ -95,22 +96,25 @@ def clean_titles(current_title: str) -> str:
     Returns:
         current_title: The cleaned title.
     """
-    # Remove encoding issues like \xc3\x28, we are focusing solely on \x followed by 2 characters or digits
-    current_title = re.sub(r"\\x[0-9a-fA-F]{2}", "", current_title)
+    if not pd.isna(current_title):
+        # Remove encoding issues like \xc3\x28, we are focusing solely on \x followed by 2 characters or digits
+        current_title = re.sub(r"\\x[0-9a-fA-F]{2}", "", current_title)
 
-    # Remove punctuations except hyphens "-"
-    current_title = re.sub(r"[^\w\s&À-ÿ-]", "", current_title)
+        # Remove punctuations except hyphens "-"
+        current_title = re.sub(r"[^\w\s&ÀàÀ-ÿ-]", "", current_title)
 
-    # Convert to title case
-    current_title = current_title.title()
+        # Convert to title case
+        current_title = current_title.title()
 
-    # Normalize number of spaces (remove extra spaces)
-    current_title = re.sub(r"\s+", " ", current_title)
+        # Normalize number of spaces (remove extra spaces)
+        current_title = re.sub(r"\s+", " ", current_title)
 
-    # Remove trailing spaces
-    current_title = current_title.strip()
+        # Remove trailing spaces
+        current_title = current_title.strip()
 
-    return current_title
+        return current_title
+
+    return ""  # Will be cleaned in the next steps
 
 
 def drop_empty_titles_and_journals(df: DataFrame) -> DataFrame:
@@ -123,8 +127,14 @@ def drop_empty_titles_and_journals(df: DataFrame) -> DataFrame:
     Returns:
         - filtered_df: The dataFrame without rows containing empty 'title' or 'journal' values.
     """
-    drop_condition = (df["title"] == "") | (df["journal"] == "")
-    filtered_df = df[~drop_condition]
+    filter_condition = (
+        (df["title"] != "")
+        & (pd.notna(df["title"]))
+        & (df["journal"] != "")
+        & (pd.notna(df["journal"]))
+    )
+
+    filtered_df = df[filter_condition]
     return filtered_df
 
 
@@ -141,8 +151,12 @@ def drop_duplicate_ids_then_index(
     Returns:
         - A tuple containing the modified drugs DataFrame and articles DataFrame.
     """
-    drugs_df.drop_duplicates(subset=["atccode"], keep="first", inplace=True)
-    all_articles_df.drop_duplicates(subset=["id"], keep="first", inplace=True)
+    drugs_df = drugs_df.drop_duplicates(
+        subset=["atccode"], keep="first", ignore_index=True
+    )
+    all_articles_df = all_articles_df.drop_duplicates(
+        subset=["id"], keep="first", ignore_index=True
+    )
 
     # Index the dataframes using IDs
     drugs_df.set_index("atccode", inplace=True)

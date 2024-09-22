@@ -1,16 +1,8 @@
-# Third-party packages
-from loguru import logger
-from sys import stderr
-
-logger.remove()
-logger.add(
-    stderr,
-    level="INFO",
-    format="<cyan>[{file.name}:{line} - {function}()]</cyan> <green>{time:YYYY-MM-DD HH:mm:ss}</green> - {level} - <level>{message}</level>",
-)
-
 # Built-in packages
 from typing import Dict, List, Set
+
+# My Custom packages
+from app.utils.my_logger import logger
 
 
 def get_all_articles_from_journal(journal_dict: Dict) -> List:
@@ -23,6 +15,15 @@ def get_all_articles_from_journal(journal_dict: Dict) -> List:
     Returns:
         - List: A list containing PubMed articles and clinical trials.
     """
+    if (
+        "referencedBy" not in journal_dict
+        or "pubmedArticles" not in journal_dict["referencedBy"]
+        or "clinicalTrials" not in journal_dict["referencedBy"]
+    ):
+        raise KeyError(
+            f"The following journal is broken and missing important keys : {journal_dict} "
+        )
+
     pubmed = journal_dict["referencedBy"]["pubmedArticles"]
     clinical_trials = journal_dict["referencedBy"]["clinicalTrials"]
 

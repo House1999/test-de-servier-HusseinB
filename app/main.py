@@ -1,20 +1,13 @@
 # Third Party Packages
 from pandera.typing import DataFrame
-from loguru import logger
-from sys import stderr
-
-logger.remove()
-logger.add(
-    stderr,
-    level="INFO",
-    format="<cyan>[{file.name}:{line} - {function}()]</cyan> <green>{time:YYYY-MM-DD HH:mm:ss}</green> - {level} - <level>{message}</level>",
-)
 
 # Built-in Packages
 import argparse
 from typing import List
+import warnings
 
 # My Custom Modules
+from app.utils.my_logger import logger
 import app.utils.files_processing as U
 import app.src.adhoc.json_processing as A
 import app.src.pandas_processing.load as L
@@ -46,10 +39,14 @@ def clean_dataframes(
     logger.info("[Cleaning] - Successfully standardized date formats.")
 
     # Merge duplicate rows together, filling in missing columns based on other rows
-    clinical_articles_group = clinical_df.groupby(["title", "date"])
+    clinical_articles_group = clinical_df.groupby(["title", "date"], group_keys=False)[
+        clinical_df.columns.tolist()
+    ]
     clinical_df = clinical_articles_group.apply(T.merge_rows).reset_index(drop=True)
 
-    pubmed_articles_group = pubmed_df.groupby(["title", "date"])
+    pubmed_articles_group = pubmed_df.groupby(["title", "date"], group_keys=False)[
+        clinical_df.columns.tolist()
+    ]
     pubmed_df = pubmed_articles_group.apply(T.merge_rows).reset_index(drop=True)
     logger.info("[Cleaning] - Successfully filled in missing data.")
 

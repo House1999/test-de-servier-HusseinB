@@ -1,18 +1,10 @@
-# Third-party packages
-from loguru import logger
-from sys import stderr
-
-logger.remove()
-logger.add(
-    stderr,
-    level="INFO",
-    format="<cyan>[{file.name}:{line} - {function}()]</cyan> <green>{time:YYYY-MM-DD HH:mm:ss}</green> - {level} - <level>{message}</level>",
-)
-
 # Built-in packages
 import os
 import json
 from typing import Dict
+
+# My Custom packages
+from app.utils.my_logger import logger
 
 
 def create_folders_if_not_exist(output_filepath: str) -> None:

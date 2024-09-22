@@ -1,20 +1,12 @@
 # Third-party packages
 import pandas as pd
 from pandera.typing import DataFrame
-from loguru import logger
-from sys import stderr
-
-logger.remove()
-logger.add(
-    stderr,
-    level="INFO",
-    format="<cyan>[{file.name}:{line} - {function}()]</cyan> <green>{time:YYYY-MM-DD HH:mm:ss}</green> - {level} - <level>{message}</level>",
-)
 
 # Built-in packages
 from typing import Dict, List
 
 # My Custom packages
+from app.utils.my_logger import logger
 from app.src.graph_linkage.journal_mentions import JournalMentions
 
 
@@ -26,15 +18,7 @@ def merge_rows(group):
     """
     This function fills all missing data by using values from other instances of the same row (duplicates).
     Once the rows are merged, it then removes duplicates, returning only a single row per unique entry (ID).
-
-    Parameters:
-        - group (DataFrame): A pandas DataFrame Group (grouped on title and mentiond ate).
-
-    Returns:
-        - DataFrame: A single row with missing values filled and duplicates dropped.
     """
-
-    """"""
     return group.ffill().bfill().iloc[0]
 
 
